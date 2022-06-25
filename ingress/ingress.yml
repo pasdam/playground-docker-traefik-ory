@@ -1,0 +1,11 @@
+version: '2'
+services:
+  ingress:
+    image: traefik:2.7.1
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
+    volumes:
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock # this is required so Traefik can listen to the Docker events
