@@ -13,6 +13,11 @@ services:
       - 'traefik.http.routers.api.tls.options=default'
       - 'traefik.http.routers.api.tls=true'
 
+  mail:
+    extends:
+      file: ./mail/mail.yml
+      service: mail
+
   # Test containers
   whoami1:
     image: containous/whoami

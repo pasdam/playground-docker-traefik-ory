@@ -1,0 +1,20 @@
+{
+  "adminCertFile": "",
+  "adminKeyFile": "",
+  "autoStartBrowser": false,
+  "certFile": "",
+  "dbDatabase": "./mailslurper.db",
+  "dbEngine": "SQLite",
+  "dbHost": "",
+  "dbPassword": "",
+  "dbPort": 0,
+  "dbUserName": "",
+  "keyFile": "",
+  "maxWorkers": 1000,
+  "serviceAddress": "0.0.0.0",
+  "servicePort": 4437,
+  "smtpAddress": "0.0.0.0",
+  "smtpPort": 1025,
+  "wwwAddress": "0.0.0.0",
+  "wwwPort": 4436
+}
