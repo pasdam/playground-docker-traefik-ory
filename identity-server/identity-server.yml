@@ -1,0 +1,25 @@
+version: '2'
+services:
+
+  kratos-migrate:
+    image: oryd/kratos:v0.10.1
+    environment:
+      - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true&mode=rwc
+    volumes:
+      - ./sqlite:/var/lib/sqlite
+      - ./kratos:/etc/config/kratos:ro
+    command: -c /etc/config/kratos/kratos.yml migrate sql -e --yes
+    restart: on-failure
+
+  kratos:
+    depends_on:
+      - kratos-migrate
+    image: oryd/kratos:v0.10.1
+    restart: unless-stopped
+    environment:
+      - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true
+      - LOG_LEVEL=trace
+    command: serve -c /etc/config/kratos/kratos.yml --watch-courier
+    volumes:
+      - ./sqlite:/var/lib/sqlite
+      - ./kratos:/etc/config/kratos:ro

@@ -18,20 +18,46 @@ services:
       file: ./mail/mail.yml
       service: mail
 
-  # Test containers
-  whoami1:
-    image: containous/whoami
+  kratos-migrate:
+    extends:
+      file: ./identity-server/identity-server.yml
+      service: kratos-migrate
+
+  kratos:
+    extends:
+      file: ./identity-server/identity-server.yml
+      service: kratos
     labels:
       - 'traefik.enable=true'
-      - "traefik.http.routers.whoami1.rule=Host(`localhost`) && Path(`/whoami1`)"
-      - "traefik.http.routers.whoami1.middlewares=whoami1-strip-prefix@docker,whoami1-testheader@docker"
-      - "traefik.http.middlewares.whoami1-strip-prefix.stripprefix.prefixes=/whoami1"
-      - "traefik.http.middlewares.whoami1-testheader.headers.customrequestheaders.X-Service-Name=whoami1"
-  whoami2:
-    image: containous/whoami
+      - 'traefik.http.middlewares.kratos-admin-strip-prefix.stripprefix.prefixes=/kratos-admin'
+      - 'traefik.http.middlewares.kratos-strip-prefix.stripprefix.prefixes=/kratos'
+      - 'traefik.http.routers.kratos-admin.entrypoints=https'
+      - 'traefik.http.routers.kratos-admin.middlewares=kratos-admin-strip-prefix@docker'
+      - 'traefik.http.routers.kratos-admin.rule=Host(`localhost`) && PathPrefix(`/kratos-admin`)'
+      - 'traefik.http.routers.kratos-admin.service=kratos-admin'
+      - 'traefik.http.routers.kratos-admin.tls.options=default'
+      - 'traefik.http.routers.kratos-admin.tls=true'
+      - 'traefik.http.routers.kratos.entrypoints=https'
+      - 'traefik.http.routers.kratos.middlewares=kratos-strip-prefix@docker'
+      - 'traefik.http.routers.kratos.rule=Host(`localhost`) && PathPrefix(`/kratos`)'
+      - 'traefik.http.routers.kratos.service=kratos'
+      - 'traefik.http.routers.kratos.tls.options=default'
+      - 'traefik.http.routers.kratos.tls=true'
+      - 'traefik.http.services.kratos-admin.loadbalancer.server.port=4434'
+      - 'traefik.http.services.kratos.loadbalancer.server.port=4433'
+      - 'test'
+
+  website:
+    extends:
+      file: ./website/website.yml
+      service: website
     labels:
       - 'traefik.enable=true'
-      - "traefik.http.routers.whoami2.rule=Host(`localhost`) && Path(`/whoami2`)"
-      - "traefik.http.routers.whoami2.middlewares=whoami2-strip-prefix@docker,whoami2-testheader@docker"
-      - "traefik.http.middlewares.whoami2-strip-prefix.stripprefix.prefixes=/whoami2"
-      - "traefik.http.middlewares.whoami2-testheader.headers.customrequestheaders.X-Service-Name=whoami2"
+      - 'traefik.http.routers.website.entrypoints=https'
+      - 'traefik.http.routers.website.rule=Host(`localhost`) && PathPrefix(`/website/`)'
+      - 'traefik.http.routers.website.service=website'
+      - 'traefik.http.routers.website.tls.options=default'
+      - 'traefik.http.routers.website.tls=true'
+      - "traefik.http.middlewares.website-strip-prefix.stripprefix.prefixes=/website"
+      - "traefik.http.routers.website.middlewares=website-strip-prefix@docker"
+      - "traefik.http.services.website.loadbalancer.server.port=4455"

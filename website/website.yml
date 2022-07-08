@@ -1,0 +1,11 @@
+version: '2'
+services:
+
+  website:
+    image: oryd/kratos-selfservice-ui-node:v0.10.1
+    environment:
+      - KRATOS_PUBLIC_URL=http://kratos:4433
+      - KRATOS_BROWSER_URL=https://localhost/kratos
+      - PORT=4455
+      - SECURITY_MODE=
+    restart: on-failure
