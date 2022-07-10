@@ -12,6 +12,21 @@ Playground to test [Ory](https://www.ory.sh/) components integration with
 * [Traefik](https://traefik.io/);
 * [Kratos](https://www.ory.sh/kratos/).
 
+## Setup
+
+If you want to use the login with Github feature you need to create an
+[OAuth2 app](https://www.ory.sh/docs/guides/social-signin/github) in Github.
+
+Then execute the following:
+
+```sh
+cat <<EOT >> identity-server/kratos.env
+# GitHub secrets
+SELFSERVICE_METHODS_OIDC_CONFIG_PROVIDERS_0_CLIENT_ID=<github-client-id>
+SELFSERVICE_METHODS_OIDC_CONFIG_PROVIDERS_0_CLIENT_SECRET=<github-client-secret>
+EOT
+```
+
 ## Usage
 
 To start all the services

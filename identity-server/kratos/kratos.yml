@@ -18,6 +18,15 @@ selfservice:
   methods:
     password:
       enabled: true
+    oidc:
+      config:
+        providers:
+          - id: github
+            provider: github
+            mapper_url: file:///etc/config/kratos/oidc.github.jsonnet
+            scope:
+              - user:email
+      enabled: true
 
   flows:
     error:
@@ -50,6 +59,9 @@ selfservice:
       ui_url: https://localhost/website/registration
       after:
         password:
+          hooks:
+            - hook: session
+        oidc:
           hooks:
             - hook: session
 

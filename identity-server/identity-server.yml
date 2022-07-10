@@ -19,6 +19,8 @@ services:
     environment:
       - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true
       - LOG_LEVEL=trace
+    env_file:
+      - kratos.env
     command: serve -c /etc/config/kratos/kratos.yml --watch-courier
     volumes:
       - ./sqlite:/var/lib/sqlite
