@@ -1,0 +1,55 @@
+- id: "ory:whoami:anonymous"
+  match:
+    url: "<http[,s]>://localhost/whoami"
+    methods:
+      - GET
+  authenticators:
+    - handler: anonymous
+  authorizer:
+    handler: allow
+  mutators:
+    - handler: noop
+
+- id: "ory:whoami:protected"
+  match:
+    url: "<http[,s]>://localhost/whoami-protected"
+    methods:
+      - GET
+  authenticators:
+    - handler: cookie_session
+  authorizer:
+    handler: allow
+  mutators:
+    - handler: header
+  errors:
+    - handler: redirect
+      config:
+        to: https://localhost/website/login
+
+- id: "ory:website:anonymous"
+  match:
+    url: "<http[,s]>://localhost/website/<{registration,welcome,recovery,verification*,login*,error,**.css,**.js,**.png,}>"
+    methods:
+      - GET
+  authenticators:
+    - handler: anonymous
+  authorizer:
+    handler: allow
+  mutators:
+    - handler: noop
+
+- id: "ory:website:protected"
+  match:
+    url: "<http[,s]>://localhost/website/<{debug,dashboard,settings*}>"
+    methods:
+      - GET
+  authenticators:
+    - handler: cookie_session
+  authorizer:
+    handler: allow
+  mutators:
+    - handler: header
+  errors:
+    - handler: redirect
+      config:
+        to: https://localhost/website/login

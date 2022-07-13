@@ -1,0 +1,9 @@
+version: '2'
+services:
+  auth-proxy:
+    image: oryd/oathkeeper:v0.38
+    command:
+      serve proxy -c "/etc/config/oathkeeper/oathkeeper.yml"
+    restart: on-failure
+    volumes:
+      - ./oathkeeper:/etc/config/oathkeeper
